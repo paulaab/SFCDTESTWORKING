@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -53,11 +54,9 @@ public class MainActivity extends AppCompatActivity {
     private volatile List<Connection> connectionList;
     private ListView listDevices;
     private ListViewAdapter listAdapter;
+    private volatile List<Button> buttonList;
 
-    TimerTask timerTask;
-    TimerTask timerTask2;
-    Timer timer2 = new Timer();
-    Timer timer = new Timer();
+
 
 
 
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         connectionList = new CopyOnWriteArrayList<Connection>();
         listAdapter = new ListViewAdapter(globalContext, connectionList);
         listDevices.setAdapter(listAdapter);
+        buttonList = new ArrayList<Button>();
         //Initialize Server
         connectionManager = new ConnectionManager();
         serverOn = true;
@@ -214,7 +214,7 @@ runOnUiThread(new Runnable() {
         }
     }
 
-    /*===================================== Connection =======================================*/
+    /*===================================== Connection =====================================*/
     //Starts reception of messages
     public class Connection {
         private Socket cliSocket;
@@ -357,7 +357,9 @@ runOnUiThread(new Runnable() {
 
     }
 
-    /*-----------------Menu on Toolbar------------------------------------*/
+
+    /*===================================== Layout =========================================*/
+    /*---------------------------------- Menu on Toolbar------------------------------------*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -377,6 +379,10 @@ runOnUiThread(new Runnable() {
                     try {
                         connectionManager.clearConnections();
                         close = true;
+                        if(!buttonList.isEmpty()){
+                            buttonList.clear();
+                        }
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -402,7 +408,7 @@ runOnUiThread(new Runnable() {
         }
     }
 
-    /*------------------List of devices adapter------------------------------*/
+    /*---------------------------------List of devices adapter------------------------------*/
     public class ListViewAdapter extends BaseAdapter {
 
         List<Connection> connectionList;
@@ -424,27 +430,34 @@ runOnUiThread(new Runnable() {
             TextView tv_hostname = (TextView) convertView.findViewById(R.id.client_name);
             TextView tv_clientIP = (TextView) convertView.findViewById(R.id.client_ip);
             final Button button = (Button) convertView.findViewById(R.id.detailsButton);
+
             button.setBackgroundColor(Color.GRAY);
             button.setText("Select");
+
 
             //Button buttonState= (Button) findViewById(R.id.buttonState);
 
             final Connection con = connectionList.get(position);
+            button.setTag(con.getIP());
+            buttonList.add(button);
 
 
             button.setOnClickListener(new View.OnClickListener(){
 
                 public void onClick(View v){
-                    button.setBackgroundColor(getResources().getColor(R.color.lightGreen));
-                    button.setText("Selected");
+
 
 
                     for(Connection conn : connectionList){
-
                         conn.setFocus(false);
-
-
                     }
+                    for(Button b : buttonList){
+                        b.setBackgroundColor(Color.GRAY);
+                        b.setText("Select");
+                    }
+                    button.setBackgroundColor(getResources().getColor(R.color.lightGreen));
+                    button.setText("Selected");
+
                     con.setFocus(true);
                     if(con.isOnline()){
 
@@ -458,7 +471,7 @@ runOnUiThread(new Runnable() {
                         buttonState.setBackgroundColor(getResources().getColor(R.color.red));
                         buttonState.setText("OFFLINE: "+con.getName());
                     }
-                    //clearView();
+
                 }
             });
 
