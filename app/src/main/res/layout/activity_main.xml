@@ -1,33 +1,83 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.vodafone.innogarage.testsfcdtool.MainActivity"
-    android:orientation="vertical">
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoShadowHeight="4dp">
 
-    <!--ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"-->
+        android:background="@color/colorPrimaryDark">
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            tools:context="de.vodafone.innogarage.testsfcdtool.MainActivity" />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:background="@drawable/paper">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+
+            android:background="@color/whitePaper">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="List of SFCDs"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:typeface="sans"/>
+
+            <ImageView
+                android:id="@+id/sfcd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sfcd"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="center_vertical"
+
+
+                />
+
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/buttonState"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:clickable="false"
+            />
+
         <ListView
             android:id="@+id/mSFCDList"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="300dp"
+            >
 
+        </ListView>
 
-        >
-         </ListView>
-    <!--/ScrollView-->
-    <Button
-        android:id="@+id/buttonState"
-        android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:clickable="false"
-        />
+    </LinearLayout>
 
 
 
-</LinearLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

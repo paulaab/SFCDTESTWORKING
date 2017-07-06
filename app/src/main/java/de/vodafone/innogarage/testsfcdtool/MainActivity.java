@@ -1,8 +1,15 @@
 package de.vodafone.innogarage.testsfcdtool;
 
+import android.Manifest;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telecom.Connection;
@@ -17,6 +24,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,21 +52,23 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        OnMapReadyCallback,
+        GoogleMap.OnMyLocationButtonClickListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
 
     /*--------Connection Variables------------*/
     public static int socketPortForBroadcast = 45555;
     public static int socketServerPortForSFCD = 45556;
-    public int bufferSize = 4096;
-    public Context globalContext;
     public ConnectionManager connectionManager;
     public volatile boolean serverOn;
-    private Handler handler;
+    private volatile boolean close;
+
 
 
     /*--------Layout Variables----------------*/
     private Button buttonState;
-    private volatile boolean close;
+    public Context globalContext;
 
 
     /*--------Devices List Variables----------*/
@@ -56,80 +77,39 @@ public class MainActivity extends AppCompatActivity {
     private ListViewAdapter listAdapter;
     private volatile List<Button> buttonList;
 
-
-
-
-
-
-
+    /*-------------Graph Variables------------*/
+     /*-------------Map Variables--------------*/
+    private GoogleMap mMap;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private boolean mPermissionDenied = false;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //setTheme(R.style.MyAppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         globalContext = this;
+
+        //Initialize Map
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync((OnMapReadyCallback) this);
+
+
         //Initialize views
         listDevices = (ListView) findViewById(R.id.mSFCDList);
         buttonState = (Button) findViewById(R.id.buttonState);
+
         //Initialize list
         connectionList = new CopyOnWriteArrayList<Connection>();
         listAdapter = new ListViewAdapter(globalContext, connectionList);
         listDevices.setAdapter(listAdapter);
         buttonList = new ArrayList<Button>();
+
         //Initialize Server
         connectionManager = new ConnectionManager();
         serverOn = true;
-
-        /*/ Create the Handler object (on the main thread by default)
-        handler = new Handler();
-// Define the code block to be executed
-        Runnable runnableCode = new Runnable() {
-            @Override
-            public void run() {
-                // Do something here on the main thread
-                if (!connectionList.isEmpty()){
-                    for (Connection connec : connectionList){
-                        if(connec.isClose()){
-                            connectionList.remove(connec);
-                            listAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-                Log.d("Handlers", "Called on main thread");
-                // Repeat this the same runnable code block again another 2 seconds
-                handler.postDelayed(this, 2000);
-            }
-        };
-// Start the initial runnable task by posting through the handler
-        handler.post(runnableCode);*/
-
-        /*timerTask2 = new TimerTask() {
-            @Override
-            public void run() {
-
-                for (Connection connec : connectionList){
-                    if(connec.isClose()){
-                        connectionList.remove(connec);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                listAdapter.notifyDataSetChanged();
-                            }
-                        });
-
-                    }
-                }
-
-
-
-            }
-        };
-        timer2.schedule(timerTask2, 0, 500);*/
-
 
 
 
@@ -216,6 +196,7 @@ runOnUiThread(new Runnable() {
 
     /*===================================== Connection =====================================*/
     //Starts reception of messages
+
     public class Connection {
         private Socket cliSocket;
         private int errorCounter = 0;
@@ -357,8 +338,8 @@ runOnUiThread(new Runnable() {
 
     }
 
-
     /*===================================== Layout =========================================*/
+
     /*---------------------------------- Menu on Toolbar------------------------------------*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -367,7 +348,6 @@ runOnUiThread(new Runnable() {
 
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -500,13 +480,149 @@ runOnUiThread(new Runnable() {
 
     }
 
+    /*----------------------------Displaying results on screen------------------------------*/
+
+    public class DisplayResults extends AsyncTask<Void,Void,JSONObject>{
+
+        @Override
+        protected JSONObject doInBackground(Void... voids) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            super.onPostExecute(jsonObject);
+        }
+    }
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------Map Code------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        Log.d("MapReady", "map is ready");
+        // Add a marker in Sydney and move the camera
+        mMap.setOnMyLocationButtonClickListener(this);
+        enableMyLocation();
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+    }
+    //----------------------------------------------------------------------------My current location-----------------------------------------------------------
+    private void enableMyLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission to access the location is missing.
+            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
+                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+        } else if (mMap != null) {
+            // Access to the location has been granted to the app.
+            mMap.setMyLocationEnabled(true);
+        }
+    }
 
 
 
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
+    }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+            return;
+        }
+
+        if (PermissionUtils.isPermissionGranted(permissions, grantResults,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Enable the my location layer if the permission has been granted.
+            enableMyLocation();
+        } else {
+            // Display the missing permission error dialog when the fragments resume.
+            mPermissionDenied = true;
+        }
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if (mPermissionDenied) {
+            // Permission was not granted, display error dialog.
+            showMissingPermissionError();
+            mPermissionDenied = false;
+        }
+    }
+
+    /**
+     * Displays a dialog with error message explaining that the location permission is missing.
+     */
+    private void showMissingPermissionError() {
+        PermissionUtils.PermissionDeniedDialog
+                .newInstance(true).show(getSupportFragmentManager(), "dialog");
+    }
 
 
+    //---------------------------------------------------------------------------- End my Location-----------------------------------------------------------
 
+    //---------------------------------------------------------------------------- Display a Marker on the Map-----------------------------------------------
+    public void displayMarker(final Double Lati, final Double Longi, int snr, final float  alphaValue){
+        final long TimeToLive = 2000;
+        final BitmapDescriptor myicon;
+        int id = 0;
+        if (snr <= 10){
+            id = getResources().getIdentifier("red", "drawable", getPackageName());
+        }
+        else if(snr >= 20){
+            id = getResources().getIdentifier("yellow", "drawable", getPackageName());
+        }
+        else{
+            id = getResources().getIdentifier("green", "drawable", getPackageName());
+        }
+
+        myicon = BitmapDescriptorFactory.fromResource(id);
+
+        runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+                LatLng pos = new LatLng(Lati,Longi);
+                Marker mar = mMap.addMarker(new MarkerOptions()
+                        .position(pos)
+                        .icon(myicon)
+                        .alpha(alphaValue)
+                );
+                fadeTime(TimeToLive,mar);
+            }
+
+        });
+    }
+
+/*-----Customize characteristics of the markers: Size and time to fade--------*/
+
+
+    public void fadeTime(long duration, Marker marker) {
+
+        final Marker myMarker = marker;
+        ValueAnimator myAnim = ValueAnimator.ofFloat(1, 0);
+        myAnim.setDuration(duration);
+        myAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                myMarker.setAlpha((float) animation.getAnimatedValue());
+            }
+        });
+        myAnim.start();
+    }
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------End Map Code-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 }
