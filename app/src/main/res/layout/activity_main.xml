@@ -8,20 +8,1090 @@
     sothree:umanoPanelHeight="68dp"
     sothree:umanoShadowHeight="4dp">
 
+
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark">
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            tools:context="de.vodafone.innogarage.testsfcdtool.MainActivity" />
+        <!--Layout for values received-->
+
+        <LinearLayout
+            android:layout_width="458dp"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:weightSum="1"
+            android:padding="10dip">
+
+            <Button
+                android:id="@+id/buttonTitle"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/whitePaper"
+                android:textColor="@color/mediumBrown"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                />
+
+            <ScrollView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                >
+                <TableLayout
+                    android:id="@+id/valuesTable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:isScrollContainer="true">
+
+                    <!-- LOCATION -->
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="Location"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="20sp"
+                            android:textColor="#FFFF"
+                            android:textStyle="bold"
+                            android:background="@drawable/cell_shape2"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/altitude"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/altitude"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+
+                        <TextView
+                            android:text="@string/longitude"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/longitude"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/latitude"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/latitude"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/speed"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/speed"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/eps"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/eps"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/epx"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/epx"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/epv"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/epv"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/ept"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/ept"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/climb"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/climb"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/track"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/track"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/mode"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/mode"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/satellites"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/satellites"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+                    <!-- GSTATUS -->
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="G Status"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="20sp"
+                            android:textColor="#FFFF"
+                            android:textStyle="bold"
+                            android:background="@drawable/cell_shape2"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/cellid"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/cellid"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/currenttime"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/currenttime"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            android:textColor="#000"
+                            android:textSize="16sp" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/emmstatereg"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/emmstatereg"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/emmstateserv"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/emmstateserv"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/imsregstate"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/imsregstate"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/ltecastate"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/ltecastate"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/lterxchan"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/lterxchan"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/ltetxchan"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/ltetxchan"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/lteband"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/lteband"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/ltebw"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/ltebw"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/mode"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/gmode"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/pccrxdrssi"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/pccrxdrssi"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/pccrxmrssi"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/pccrxrmrssi"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/psstate"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/psstate"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/rrcstate"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/rrcstate"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/rsrpRXD"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/rsrprxdr"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/rsrpRXM"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/rsrprxm"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/rsrq"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/grsrq"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+
+                        <TextView
+                            android:text="@string/resetcounter"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/resetcounter"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/sinr"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/gsinr"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/systemmode"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/systemmode"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/tac"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/gtac"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true">
+                        <TextView
+                            android:text="@string/txpower"
+                            android:layout_width="wrap_content"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/gtxpower"
+                            android:layout_width="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            android:textSize="16sp"
+                            android:textColor="#000"
+                            android:background="@drawable/cell_shape"
+                            android:paddingLeft="10dp"
+                            />
+
+                    </TableRow>
+
+
+                </TableLayout>
+                <!-- SERVING -->
+
+
+
+
+
+
+
+                <!-- INTRAFREQ -->
+
+
+
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:isScrollContainer="true">
+                <ListView
+                    android:id="@+id/listServing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></ListView>
+            </LinearLayout>
+
 
         </LinearLayout>
+
+        <!-- Layout for the map itself-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:context="de.vodafone.innogarage.testsfcdtool.MainActivity" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -72,6 +1142,7 @@
             android:id="@+id/mSFCDList"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:paddingTop="10dp"
             >
 
         </ListView>

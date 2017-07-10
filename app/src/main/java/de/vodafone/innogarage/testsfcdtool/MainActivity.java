@@ -19,9 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,6 +51,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -65,10 +71,20 @@ public class MainActivity extends AppCompatActivity implements
     private volatile boolean close;
 
 
-
     /*--------Layout Variables----------------*/
     private Button buttonState;
     public Context globalContext;
+    private Button buttonTitle;
+
+    private ListView lvServing;
+    private ListView lvIntrafreq;
+    private ListView lvInterfreq;
+    public ArrayAdapter<String> arrayAdapter;
+    List<String> servingList = new ArrayList<String>();
+    //ArrayList<HashMap<String, String>> servingList;
+    ArrayList<HashMap<String, String>> intrafreqList;
+    ArrayList<HashMap<String, String>> interfreqList;
+    ArrayList<String> arrayList;
 
 
     /*--------Devices List Variables----------*/
@@ -78,10 +94,59 @@ public class MainActivity extends AppCompatActivity implements
     private volatile List<Button> buttonList;
 
     /*-------------Graph Variables------------*/
-     /*-------------Map Variables--------------*/
+    /*-------------Map Variables--------------*/
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
+
+    /*----------Additional Variables---------*/
+    TimerTask timerTask;
+    TimerTask timerTask2;
+    Timer timer2 = new Timer();
+    Timer timer = new Timer();
+
+    /*------------Textviews------------------*/
+    //Location
+    TextView altitude;
+    TextView ept;
+    TextView climb;
+    TextView eps;
+    TextView epv;
+    TextView epx;
+    TextView speed;
+    TextView track;
+    TextView longitudetx;
+    TextView latitudetx;
+    TextView satellites;
+    TextView modetx;
+    //GStatus
+    TextView ltebw;
+    TextView rsrprxdr;
+    TextView rsrprxm;
+    TextView grsrq;
+    TextView gsinr;
+    TextView gmode;
+    TextView ltecastate;
+    TextView cellid;
+    TextView currenttime;
+    TextView ltetxchan;
+    TextView gtac;
+    TextView emmstatereg;
+    TextView rrcstate;
+    TextView temperature;
+    TextView systemmode;
+    TextView psstate;
+    TextView emmstateserv;
+    TextView lteband;
+    TextView lterxchan;
+    TextView gtxpower;
+    TextView imsregstate;
+    TextView resetcounter;
+    TextView pccrxdrssi;
+    TextView pccrxrmrssi;
+
+
+
 
 
 
@@ -100,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements
         //Initialize views
         listDevices = (ListView) findViewById(R.id.mSFCDList);
         buttonState = (Button) findViewById(R.id.buttonState);
+        buttonTitle = (Button) findViewById(R.id.buttonTitle);
 
         //Initialize list
         connectionList = new CopyOnWriteArrayList<Connection>();
@@ -107,9 +173,99 @@ public class MainActivity extends AppCompatActivity implements
         listDevices.setAdapter(listAdapter);
         buttonList = new ArrayList<Button>();
 
+
+        servingList = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1,servingList);
+        intrafreqList = new ArrayList<>();
+        interfreqList = new ArrayList<>();
+        lvServing = (ListView) findViewById(R.id.listServing);
+        //lvInterfreq = (ListView) findViewById(R.id.listInterfreq);
+        //lvIntrafreq = (ListView) findViewById(R.id.listIntrafreq);
+
+
         //Initialize Server
         connectionManager = new ConnectionManager();
         serverOn = true;
+
+        //Initialize Textviews
+        //LOCATION
+        altitude = (TextView) findViewById(R.id.altitude);
+        ept = (TextView) findViewById(R.id.ept);
+        climb = (TextView) findViewById(R.id.climb);
+        eps = (TextView) findViewById(R.id.eps);
+        epv = (TextView) findViewById(R.id.epv);
+        epx = (TextView) findViewById(R.id.epx);
+        speed = (TextView) findViewById(R.id.speed);
+        track = (TextView) findViewById(R.id.track);
+        longitudetx = (TextView) findViewById(R.id.longitude);
+        latitudetx = (TextView) findViewById(R.id.latitude);
+        satellites = (TextView) findViewById(R.id.satellites);
+        modetx = (TextView) findViewById(R.id.mode);
+        //GSTATUS
+        ltebw = (TextView) findViewById(R.id.ltebw);
+        rsrprxdr = (TextView) findViewById(R.id.rsrprxdr);
+        rsrprxm = (TextView) findViewById(R.id.rsrprxm);
+        grsrq = (TextView) findViewById(R.id.grsrq);
+        gsinr = (TextView) findViewById(R.id.gsinr);
+        gmode = (TextView) findViewById(R.id.gmode);
+        ltecastate = (TextView) findViewById(R.id.ltecastate);
+        cellid = (TextView) findViewById(R.id.cellid);
+        currenttime= (TextView) findViewById(R.id.currenttime);
+        ltetxchan = (TextView) findViewById(R.id.ltetxchan);
+        gtac = (TextView) findViewById(R.id.gtac);
+        emmstatereg = (TextView) findViewById(R.id.emmstatereg);
+        rrcstate = (TextView) findViewById(R.id.rrcstate);
+        temperature = (TextView) findViewById(R.id.temperature);
+        systemmode = (TextView) findViewById(R.id.systemmode);
+        psstate = (TextView) findViewById(R.id.psstate);
+        emmstateserv = (TextView) findViewById(R.id.emmstateserv);
+        lteband = (TextView) findViewById(R.id.lteband);
+        lterxchan = (TextView) findViewById(R.id.lterxchan);
+        gtxpower = (TextView) findViewById(R.id.gtxpower);
+        imsregstate = (TextView) findViewById(R.id.imsregstate);
+        resetcounter = (TextView) findViewById(R.id.resetcounter);
+        pccrxdrssi  = (TextView) findViewById(R.id.pccrxdrssi);
+        pccrxrmrssi = (TextView) findViewById(R.id.pccrxrmrssi);
+
+        buttonTitle.setText("Please select a device");
+        lvServing.setAdapter(arrayAdapter);
+
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+
+                try {
+                    new DisplayResults().execute();
+                    //Thread.sleep(10);
+                    for(Connection cons: connectionList){
+                        if(!cons.isFocus()){
+                            cons.wipeList();
+                        }
+                    }
+
+                }
+                catch (Exception ex){
+                    ex.printStackTrace();
+                    Log.e("TimerScanner","Error executing ScannerTask");
+
+                }
+
+            }
+        };
+        timer.schedule(timerTask, 0, 1500);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -151,16 +307,15 @@ public class MainActivity extends AppCompatActivity implements
                         connectionList.add(new Connection(clientSocket));
                         Log.e("ConnectionManager "," Connection Listener: New SFCD added. IP= " + clientSocket.getInetAddress().toString());
                         Log.e("ConnectionManager","LIST LENGTH : " + connectionList.size());
-runOnUiThread(new Runnable() {
-    @Override
-    public void run() {
-        Log.e("inrunoi","LIST LENGTH : " + connectionList.size());
-        listAdapter.notifyDataSetChanged();
-        Log.e("inrunoi","Notified");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("inrunoi","LIST LENGTH : " + connectionList.size());
+                                listAdapter.notifyDataSetChanged();
+                                Log.e("inrunoi","Notified");
 
-    }
-});
-
+                            }
+                        });
 
                         //Connections List changed. Notify ListView adapter
                     }catch (IOException e){
@@ -201,7 +356,7 @@ runOnUiThread(new Runnable() {
         private Socket cliSocket;
         private int errorCounter = 0;
         private boolean focus, online;
-        private List<JSONObject> incomingData;
+        public volatile List<JSONObject> incomingData = new CopyOnWriteArrayList<>();
         public volatile JSONObject incomingJson;
         private InputStream inputStream;
         //Client Data
@@ -254,16 +409,27 @@ runOnUiThread(new Runnable() {
                         if (errorCounter > 5) {
                             Log.e("\nInputStreamThread", "SFCD " + clientName + " seems to be inactive. Stopping receiving thread...\n");
                             close = true;
-                            // TODO: Implement method to remove this connection.
-                            // connectionList.remove(Connection);
-
+                            // TODO: Check if following method to remove this connection works.
                             try {
                                 cliSocket.close();
                                 cliSocket = null;
+                                for (Connection connec : connectionList){
+                                    if(connec.isClose()){
+                                        connectionList.remove(connec);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                listAdapter.notifyDataSetChanged();
+                                                Log.e("\nInputStreamThread", "SFCD " + clientName + " Connection removed");
+                                            }
+                                        });
+
+                                    }
+                                }
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            Log.e("\nInputStreamThread", "SFCD " + clientName + " Connection removed");
+
                         }
                     }
                     //Save incoming message into a json object
@@ -281,8 +447,8 @@ runOnUiThread(new Runnable() {
                             jsonObject = new JSONObject();
                         }
                         //Save into list of incoming data objects
-                        incomingJson = jsonObject;
-                        // incomingData.add(jsonObject);
+                        //incomingJson = jsonObject;
+                        incomingData.add(jsonObject);
                         //Log.e("Connection: ", cliSocket.getInetAddress() + " Message received: " + jsonObject.toString() + " => Placed in incomingData, parsed as JSON");
                         //Check if Mode is online or not
                         try {
@@ -302,18 +468,18 @@ runOnUiThread(new Runnable() {
                         }
 
                         //Display Marker for every message received.
-                        /*
+
                         try {
                             Double latitude = jsonObject.getJSONObject("gstatus").getDouble("latitude");
                             Double longitude = jsonObject.getJSONObject("gstatus").getDouble("longitude");
                             int snr = jsonObject.getJSONArray("serving").getJSONObject(0).getInt("SNR");
-                            displayMarker(latitude, longitude, snr, 1.0F);
+                            displayMarker(latitude, longitude, snr);
 
                         }
                         catch (JSONException e){
                             System.out.print("Could not get coordinates data:");
                             e.printStackTrace();
-                        }*/
+                        }
                     }
 
                     try {
@@ -335,6 +501,12 @@ runOnUiThread(new Runnable() {
         public void setFocus(boolean focus) {this.focus = focus;}
         public boolean isOnline() {return online;}
         public boolean isClose(){return close;}
+        public void wipeList(){
+            if(!incomingData.isEmpty()){
+                incomingData.remove(0);
+            }
+
+        }
 
     }
 
@@ -386,6 +558,54 @@ runOnUiThread(new Runnable() {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /*------------------------------------------Cleanviews----------------------------------*/
+    public void clearViews(){
+        ltebw.setText("N/A");
+        rsrprxdr.setText("N/A");
+        rsrprxm.setText("N/A");
+        grsrq.setText("N/A");
+        gsinr.setText("N/A");
+        gmode.setText("N/A");
+        ltecastate.setText("N/A");
+        cellid.setText("N/A");
+        currenttime.setText("N/A");
+        ltetxchan.setText("N/A");
+        gtac.setText("N/A");
+        emmstatereg.setText("N/A");
+        rrcstate.setText("N/A");
+        temperature.setText("N/A");
+        systemmode.setText("N/A");
+        psstate.setText("N/A");
+        emmstateserv.setText("N/A");
+        lteband.setText("N/A");
+        lterxchan.setText("N/A");
+        gtxpower.setText("N/A");
+        imsregstate.setText("N/A");
+        resetcounter.setText("N/A");
+        pccrxdrssi.setText("N/A");
+        pccrxrmrssi.setText("N/A");
+        altitude.setText("N/A");
+        ept.setText("N/A");
+        climb.setText("N/A");
+        eps.setText("N/A");
+        epv.setText("N/A");
+        epx.setText("N/A");
+        speed.setText("N/A");
+        track.setText("N/A");
+        longitudetx.setText("N/A");
+        latitudetx.setText("N/A");
+        satellites.setText("N/A");
+        modetx.setText("N/A");
+
+
+    }
+
+    public void clearButton(){
+
+        buttonState.setVisibility(View.INVISIBLE);
+
     }
 
     /*---------------------------------List of devices adapter------------------------------*/
@@ -444,6 +664,7 @@ runOnUiThread(new Runnable() {
                         buttonState.setVisibility(View.VISIBLE);
                         buttonState.setBackgroundColor(getResources().getColor(R.color.lightGreen));
                         buttonState.setText("ONLINE: "+con.getName());
+                        buttonTitle.setText(con.getName().toUpperCase());
 
                     }else{
 
@@ -482,18 +703,221 @@ runOnUiThread(new Runnable() {
 
     /*----------------------------Displaying results on screen------------------------------*/
 
-    public class DisplayResults extends AsyncTask<Void,Void,JSONObject>{
-
+    public class DisplayResults extends AsyncTask<Void,Void,Wrapper>{
         @Override
-        protected JSONObject doInBackground(Void... voids) {
-            return null;
+        protected void onPreExecute() {
+            servingList.clear();
+            interfreqList.clear();
+            intrafreqList.clear();
         }
 
         @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            super.onPostExecute(jsonObject);
+        protected Wrapper doInBackground(Void... voids) {
+            Wrapper w = new Wrapper();
+            JSONObject actMsg = null;
+            Connection con = null;
+            List<JSONObject> msgList;
+            if(!connectionList.isEmpty()){
+                for (Connection temp : connectionList){
+                    //temp.wipeList();
+                    if(temp.isFocus()){
+                        con = temp;
+                    }
+                }
+                if (con == null){
+                    con = connectionList.get(0);
+                }
+                msgList = con.getIncomingData();
+
+               if(!msgList.isEmpty()){
+                   w.actMsg  = msgList.get(0);
+                    msgList.remove(0);
+
+                   try {
+                       JSONArray sarr = w.actMsg.getJSONArray("serving");
+                       if (sarr != null) {
+                           // looping through all objects
+                           for (int i = 0; i < sarr.length(); i++) {
+                               JSONObject c = sarr.getJSONObject(i);
+                               Iterator<?> keys = c.keys();
+                               while (keys.hasNext()) {
+                                   String mKey = (String) keys.next();
+                                   String info = mKey + i+" : "+c.getString(mKey);
+                                   servingList.add(info);
+
+                               }
+
+
+
+
+
+
+                               /*String searfcn = c.getString("EARFCN");
+                               String smcc = c.getString("MCC");
+                               String smnc = c.getString("MNC");
+                               String stac = c.getString("TAC");
+                               String scid = c.getString("CID");
+                               String sbd = c.getString("Bd");
+                               String sd = c.getString("D");
+                               String su = c.getString("U");
+                               String ssnr = c.getString("SNR");
+                               String spci = c.getString("PCI");
+                               String srsrq = c.getString("RSRQ");
+                               String srsrp = c.getString("RSRP");
+                               String srssi = c.getString("RSSI");
+                               String srxlv = c.getString("RXLV");
+
+
+                               // tmp hash map for single contact
+                               HashMap<String, String> serving = new HashMap<>();
+
+                               // adding each child node to HashMap key => value
+                               serving.put("EARFCN", searfcn);
+                               serving.put("MCC", smcc);
+                               serving.put("MNC", smnc);
+                               serving.put("TAC", stac);
+                               serving.put("CID", scid);
+                               serving.put("Bd", sbd);
+                               serving.put("D", sd);
+                               serving.put("U", su);
+                               serving.put("SNR", ssnr);
+                               serving.put("PCI", spci);
+                               serving.put("RSRQ", srsrq);
+                               serving.put("RSRP", srsrp);
+                               serving.put("RSSI", srssi);
+                               serving.put("RXLV", srxlv);
+
+                               // adding contact to contact list
+                               servingList.add(serving);*/
+                           }
+                           }
+                       } catch(JSONException e){
+                           Log.e("JSON Background", "Json parsing error: " + e.getMessage());
+
+
+                       }
+
+
+                   }
+
+
+
+
+
+
+
+                //actMsg = con.getIncomingJson();
+            }
+
+            return w;
         }
-    }
+
+        @Override
+        protected void onPostExecute(Wrapper w) {
+            if(!connectionList.isEmpty()){
+                if(w.actMsg!=null){
+                    Iterator<?> keys = w.actMsg.keys();
+                    while (keys.hasNext()){
+                        String mKey = (String) keys.next();
+                        switch (mKey){
+                            case "gstatus":
+                                try {
+                                    JSONObject gobj = w.actMsg.getJSONObject("gstatus");
+                                    ltebw.setText(gobj.getString("ltebw(mhz)"));
+                                    rsrprxdr.setText(gobj.getString("rsrp(dbm)pccrxdrssi"));
+                                    rsrprxm.setText(gobj.getString("rsrp(dbm)pccrxmrssi"));
+                                    grsrq.setText(gobj.getString("rsrq(db)"));
+                                    gsinr.setText(gobj.getString("sinr(db)"));
+                                    gmode.setText(gobj.getString("mode"));
+                                    ltecastate.setText(gobj.getString("ltecastate"));
+                                    cellid.setText(gobj.getString("cellid"));
+                                    currenttime.setText(gobj.getString("currenttime"));
+                                    ltetxchan.setText(gobj.getString("ltetxchan"));
+                                    gtac.setText(gobj.getString("tac"));
+                                    emmstatereg.setText(gobj.getString("emmstatereg"));
+                                    rrcstate.setText(gobj.getString("rrcstate"));
+                                    temperature.setText(gobj.getString("temperature"));
+                                    systemmode.setText(gobj.getString("systemmode"));
+                                    psstate.setText(gobj.getString("psstate"));
+                                    emmstateserv.setText(gobj.getString("emmstateserv"));
+                                    lteband.setText(gobj.getString("lteband"));
+                                    lterxchan.setText(gobj.getString("lterxchan"));
+                                    gtxpower.setText(gobj.getString("txpower"));
+                                    imsregstate.setText(gobj.getString("imsregstate"));
+                                    resetcounter.setText(gobj.getString("resetcounter"));
+                                    pccrxdrssi.setText(gobj.getString("pccrxdrssi"));
+                                    pccrxrmrssi.setText(gobj.getString("pccrxmrssi"));
+                                } catch (JSONException e){
+                                    System.out.println("Could not extract gstatus object -->");
+                                    e.printStackTrace();
+                                }
+                                break;
+
+                            case "location":
+                                try {
+                                    JSONObject lobj = w.actMsg.getJSONObject("location");
+                                    if (lobj != null) {
+                                        altitude.setText(lobj.getString("altitude"));
+                                        ept.setText(lobj.getString("ept"));
+                                        climb.setText(lobj.getString("climb"));
+                                        eps.setText(lobj.getString("eps"));
+                                        epv.setText(lobj.getString("epv"));
+                                        epx.setText(lobj.getString("epx"));
+                                        speed.setText(lobj.getString("speed"));
+                                        track.setText(lobj.getString("track"));
+                                        longitudetx.setText(lobj.getString("longitude"));
+                                        latitudetx.setText(lobj.getString("latitude"));
+                                        satellites.setText(lobj.getString("satellites"));
+                                        modetx.setText(lobj.getString("mode"));
+                                    }
+                                } catch (JSONException e) {
+                                    System.out.println("Could not extract location object -->");
+                                    e.printStackTrace();
+                                }
+
+                                break;
+
+                            case "serving":
+                                try {
+                                    JSONArray sarr = w.actMsg.getJSONArray("serving");
+                                    if (sarr != null) {
+
+                                        JSONObject sobj = sarr.getJSONObject(0);
+
+
+
+
+                                    }
+
+                                } catch (JSONException e) {
+                                    System.out.println("Could not extract serving object -->");
+                                    e.printStackTrace();
+                                }
+                                break;
+                            }
+                            arrayAdapter.notifyDataSetChanged();
+
+                        }
+                    }
+                    else {
+                    //clearViews();
+                    }
+                    /*
+                ListAdapter adapter = new SimpleAdapter(MainActivity.this, servingList, R.layout.list_item,
+                        new String[] { "EARFCN","MCC" },
+                        new int[] { R.id.key,R.id.value });
+
+                a
+                lvServing.setAdapter(adapter);*/
+
+
+                }
+                else {
+                    clearViews();
+                    clearButton();
+                }
+            }
+        }
 
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------Map Code------------------------------------------------------------------------------------
@@ -572,8 +996,9 @@ runOnUiThread(new Runnable() {
     //---------------------------------------------------------------------------- End my Location-----------------------------------------------------------
 
     //---------------------------------------------------------------------------- Display a Marker on the Map-----------------------------------------------
-    public void displayMarker(final Double Lati, final Double Longi, int snr, final float  alphaValue){
-        final long TimeToLive = 2000;
+    public void displayMarker(final Double Lati, final Double Longi, int snr){
+
+        final long TimeToLive = 1000;
         final BitmapDescriptor myicon;
         int id = 0;
         if (snr <= 10){
@@ -595,7 +1020,7 @@ runOnUiThread(new Runnable() {
                 Marker mar = mMap.addMarker(new MarkerOptions()
                         .position(pos)
                         .icon(myicon)
-                        .alpha(alphaValue)
+
                 );
                 fadeTime(TimeToLive,mar);
             }
@@ -624,5 +1049,19 @@ runOnUiThread(new Runnable() {
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------End Map Code-------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    public class Wrapper{
+        public JSONObject actMsg;
+        public String [] keysArray;
+        public String [] valuesArray;
+
+
+    }
+
+
+
+
+
+
 
 }
