@@ -586,14 +586,11 @@ public class MainActivity extends AppCompatActivity implements
     /*----------------------------Displaying results on screen------------------------------*/
 
     public class DisplayResults extends AsyncTask<Void,Void,Wrapper> {
-        @Override
-        protected void onPreExecute() {
-            listData.clear();
 
-        }
 
         @Override
         protected Wrapper doInBackground(Void... voids) {
+
             Wrapper w = new Wrapper();
             JSONObject actMsg = null;
             Connection con = null;
@@ -611,6 +608,7 @@ public class MainActivity extends AppCompatActivity implements
                 msgList = con.getIncomingData();
 
                 if (!msgList.isEmpty()) {
+                    listData.clear();
                     w.actMsg = msgList.get(0);
                     msgList.remove(0);
 
